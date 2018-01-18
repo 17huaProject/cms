@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.InvoiceMapper" >
+    
+  <select id="selectUndealInvoices"  parameterType="java.util.List" resultType="com.jeeplus.modules.business.dto.InvoiceInfoDTO" >
+	SELECT 
+		i.invoice_type as invoiceType,
+		o.order_name as orderName,
+		o.sale_price as salePrice,
+		o.number as number,
+		i.amount as amount,
+		i.title as title,
+		i.company_code as companyCode,
+		i.company_info as companyInfo,
+		i.bank_name as bankName,
+		i.bank_card as bankCard
+	from t_invoices as i LEFT JOIN t_orders as o on  o.order_id = SUBSTRING_INDEX(i.order_ids,',',1)
+	where i.invoice_status = 'HANDLING'
+  </select>
+  
+  <select id="selectInvoices4Print"  parameterType="java.util.List" resultType="com.jeeplus.modules.business.dto.InvoiceInfoDTO" >
+	SELECT 
+		i.invoice_type as invoiceType,
+		o.order_name as orderName,
+		o.sale_price as salePrice,
+		o.number as number,
+		i.amount as amount,
+		i.title as title,
+		i.company_code as companyCode,
+		i.company_info as companyInfo,
+		i.bank_name as bankName,
+		i.bank_card as bankCard
+	from t_invoices as i LEFT JOIN t_orders as o on  o.order_id = SUBSTRING_INDEX(i.order_ids,',',1)
+	where i.invoice_status = 'HANDLING' and i.id in	
+		<foreach collection="list" item="id" open="(" close=")" separator="," >
+		#{id}
+		</foreach>
+  </select>
+  
+  <select id="select4List" resultType="com.jeeplus.modules.business.entity.Invoice">
+    select
+   		id					as id, 
+   		user_id				as userId, 
+   		invoice_type		as invoiceType, 
+   		pattern				as pattern, 
+   		shipping_mode		as shippingMode, 
+   		title				as title, 
+   		company_code		as companyCode, 
+   		amount				as amount, 
+   		content				as content, 
+    	bank_name			as bankName, 
+    	bank_card			as bankCard, 
+    	company_info		as companyInfo, 
+    	create_time			as createTime, 
+    	invoice_status		as invoiceStatus, 
+    	update_time			as updateTime, 
+    	order_ids			as orderIds, 
+    	order_type			as orderType
+    from t_invoices
+    <where>
+    	<if test="userId != null and userId != ''">
+    		and user_id like #{userId}
+    	</if>
+    	<if test="invoiceType != null and invoiceType != ''">
+    		and invoice_type like #{invoiceType}
+    	</if>
+    	<if test="shippingMode != null and shippingMode != ''">
+    		and shipping_mode like #{shippingMode}
+    	</if>
+    	<if test="title != null and title != ''">
+    		and title like #{title}
+    	</if>
+    	<if test="companyCode != null and companyCode != ''">
+    		and company_code like #{companyCode}
+    	</if>
+    	<if test="invoiceStatus != null and invoiceStatus != ''">
+    		and invoice_status like #{invoiceStatus}
+    	</if>
+    	<if test="orderIds != null and orderIds != ''">
+    		and order_ids like #{orderIds}
+    	</if>
+    	<if test="orderType != null and orderType != ''">
+    		and order_type like #{orderType}
+    	</if>
+    	<if test="pattern != null">
+    		and pattern = #{pattern}
+    	</if>
+    </where>
+    order by create_time
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.MaterialModelMapper" >
+  
+  <select id="select4List" resultType="com.jeeplus.modules.business.entity.MaterialModel" >
+    select
+    	id				as id, 
+    	name			as name, 
+    	goods_info		as goodsInfo, 
+    	create_time		as createTime, 
+    	deleted			as deleted, 
+    	art_id			as artId
+    from t_material_model
+    <where>
+    	deleted = 0
+    	<if test="name != null and name != ''">
+    		and name like '%${name}%'
+    	</if>
+    </where>
+    order by create_time
+  </select>
+  
+  
+</mapper>

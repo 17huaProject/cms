@@ -1,0 +1,195 @@
+
+  <!-- 图片裁剪缩略 -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/cropper.css">
+  <link rel="stylesheet" href="css/main.css">
+
+<!-- ${ctxStatic}/cropper-master/ -->
+  <!-- Content -->
+  <div class="container" style="margin-top:30px"> 
+    <div class="row" >
+      <div class="col-md-9">
+        <div class="img-container">
+          <img id="image" src="images/sky.png" alt="Picture">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <!-- <h3>Preview:</h3> -->
+        <div class="docs-preview clearfix">
+          <div class="img-preview preview-lg"></div>
+          <div class="img-preview preview-md"></div>
+        </div>
+
+        <!-- <h3>Data:</h3> -->
+        <div class="docs-data">
+          <div class="input-group input-group-sm">
+            <label class="input-group-addon" for="dataX">X</label>
+            <input type="text" class="form-control" id="dataX" placeholder="x">
+            <span class="input-group-addon">px</span>
+          </div>
+          <div class="input-group input-group-sm">
+            <label class="input-group-addon" for="dataY">Y</label>
+            <input type="text" class="form-control" id="dataY" placeholder="y">
+            <span class="input-group-addon">px</span>
+          </div>
+          <div class="input-group input-group-sm">
+            <label class="input-group-addon" for="dataWidth">width</label>
+            <input type="text" class="form-control" id="dataWidth" placeholder="width">
+            <span class="input-group-addon">px</span>
+          </div>
+          <div class="input-group input-group-sm">
+            <label class="input-group-addon" for="dataHeight">height</label>
+            <input type="text" class="form-control" id="dataHeight" placeholder="height">
+            <span class="input-group-addon">px</span>
+          </div>         
+        </div>
+		
+		<div class="docs-toggles">
+			<div class="btn-group d-flex flex-nowrap" data-toggle="buttons">
+			  <label class="btn btn-primary active">
+				<input type="radio" class="sr-only" id="aspectRatio0" name="aspectRatio" value="1.25">
+				<span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="作品宽图">
+				  5:4
+				</span>
+			  </label>
+			  <label class="btn btn-primary">
+				<input type="radio" class="sr-only" id="aspectRatio0" name="aspectRatio" value="0.8">
+				<span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="作品窄图">
+				  4:5
+				</span>
+			  </label>
+<!-- 			  <label class="btn btn-primary active">
+				<input type="radio" class="sr-only" id="aspectRatio0" name="aspectRatio" value="1.7777777777777777">
+				<span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="宽高比: 16 / 9">
+				  16:9
+				</span>
+			  </label>
+			  <label class="btn btn-primary">
+				<input type="radio" class="sr-only" id="aspectRatio1" name="aspectRatio" value="1.3333333333333333">
+				<span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="宽高比: 4 / 3">
+				  4:3
+				</span>
+			  </label> -->
+			  <label class="btn btn-primary">
+				<input type="radio" class="sr-only" id="aspectRatio2" name="aspectRatio" value="1">
+				<span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="宽高比: 1 / 1">
+				  1:1
+				</span>
+			  </label>
+			  <label class="btn btn-primary">
+				<input type="radio" class="sr-only" id="aspectRatio3" name="aspectRatio" value="0.6666666666666666">
+				<span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="宽高比: 2 / 3">
+				  2:3
+				</span>
+			  </label>
+			  <label class="btn btn-primary">
+				<input type="radio" class="sr-only" id="aspectRatio4" name="aspectRatio" value="NaN">
+				<span class="docs-tooltip" data-toggle="tooltip" data-animation="false" title="宽高比: 自动">
+				  Free
+				</span>
+			  </label>
+			</div>
+		</div>
+		
+		<div class="docs-buttons">
+			<div class="btn-group">
+				<label class="btn btn-primary btn-upload" for="inputImage">
+					<input type="file" class="sr-only" id="inputImage" name="file" accept=".jpg,.jpeg,.png,.gif">
+					<span class="docs-tooltip" data-toggle="tooltip" data-animation="false">
+						<span class="fa fa-upload">导入图片</span>
+					</span>
+				</label>		  
+			</div>
+			<div class="btn-group">
+				<label class="btn btn-primary btn-upload" for="uploadImage">
+					<input type="button" class="sr-only" id="uploadImage" >
+					<span class="docs-tooltip" id="uploadImageSpan">
+						<span class="fa fa-upload">上传图片</span>
+					</span>
+				</label>		  
+			</div>
+			<!-- Show the cropped image in modal -->
+			<div class="modal fade docs-cropped" id="getCroppedCanvasModal" aria-hidden="true" aria-labelledby="getCroppedCanvasTitle" role="dialog" tabindex="-1">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+							<a class="btn btn-primary" id="download" href="javascript:void(0);" download="cropped.jpg">Download</a>
+						</div>
+					</div>
+				</div>
+			</div><!-- /.modal -->
+		</div><!-- /.docs-buttons -->
+      </div>
+
+    </div>
+	<div class="row" style="color:red; text-align: center;">注意：图片大小不超过2M</div>
+  </div>
+
+  <script src="js/jquery-2.1.1.min.js"></script>
+  <!-- <script src="js/jquery-3.2.1.slim.min.js"></script> -->
+  <script src="js/tether.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/cropper.js"></script>
+  <script src="js/ajaxfileupload.js"></script>
+  <script src="js/main.js"></script>
+  
+  <script type="text/javascript">
+  var getRootPath = function (){      
+	   var curWwwPath=window.document.location.href;      
+	   var pathName=window.document.location.pathname;      
+	   var pos=curWwwPath.indexOf(pathName);      
+	   var localhostPaht=curWwwPath.substring(0,pos);      
+	   var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);      
+	   return(localhostPaht+projectName);  
+	}
+  $(document).ready(function() {
+	  
+     $("#uploadImageSpan").click( function () {
+    	 $("#uploadImage").attr("disabled","disabled");
+    	 $(this).find("span").html("上传中");
+    	 
+    	 var imageData = $('#image').cropper('getData');
+    	 $.ajaxFileUpload({
+             url: getRootPath() + "/a/wms/image/uploadImageUPYun", 
+             type: 'post',
+             data : {
+            	 "x" : imageData.x ,
+            	 "y" : imageData.y ,
+            	 "width" : imageData.width ,
+            	 "height" : imageData.height
+             },
+             secureuri: false, 				//一般设置为false
+             fileElementId: 'inputImageCopy', // 上传文件的id、name属性名
+             dataType: 'JSON', //返回值类型，一般设置为json、application/json  这里要用大写  不然会取不到返回的数据
+             success: function(data, status){ 
+            	 var dataJsonStr = data.substring(data.indexOf("{") , data.indexOf("}")+1) ;
+            	 console.log(dataJsonStr);
+            	 dataJson = jQuery.parseJSON( dataJsonStr );
+            	 if(dataJson.code === 0){
+  					console.log("成功");
+  					console.log(dataJson.data);
+  					$("#imageScanBig",window.opener.document).attr("src",dataJson.data);//子窗口给父窗口元素赋值
+  					$("#imageScanSmall",window.opener.document).attr("src",dataJson.data);//子窗口给父窗口元素赋值
+  					window.close();
+  				}else{
+  					alert(dataJson.data);
+  				}
+            	 return ;
+             },
+             error: function(data, status, e){ 
+            	 $("#uploadImage").removeAttr("disabled");
+            	 $(this).find("span").html("上传图片");
+            	 alert("图片远程处理失败啦");
+             }
+         });
+ 		
+     });
+     
+   });
+   </script>
+   
+   
+   

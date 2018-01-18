@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.GoodMapper" >
+
+  <resultMap id="GoodDTOMap" type="com.jeeplus.modules.business.dto.GoodDTO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="goods_no" property="goodsNo" jdbcType="VARCHAR" />
+    <result column="goods_img" property="goodsImg" jdbcType="VARCHAR" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="count" property="count" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="attribute" property="attribute" jdbcType="VARCHAR" />
+    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="model_no" property="modelNo" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+
+  <sql id="GoodDTO_Column_List" >
+    id, goods_no, goods_img, category_id, name, count, price, attribute, brand, model_no
+  </sql>
+
+
+  <select id="selectByCategoryId" resultMap="GoodDTOMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="GoodDTO_Column_List" />
+    from t_goods
+    where deleted = '0' and category_id = #{categoryId}
+  </select>
+
+  <select id="selectGoodsByMaterialModel" resultMap="GoodDTOMap" parameterType="java.util.List" >
+    select
+    <include refid="GoodDTO_Column_List" />
+    from t_goods
+    where id in
+    <foreach collection="list" item="id" open="(" separator="," close=")">
+    	#{id}
+    </foreach>
+  </select>
+  
+  <select id="select4List" resultType="com.jeeplus.modules.business.entity.Good">
+   select
+		g.id			as id, 
+		g.goods_no		as goodsNo, 
+		g.goods_img		as goodsImg, 
+		g.name			as name, 
+		g.count			as count, 
+		g.price			as price, 
+		g.display		as display,
+		g.goods_status	as goodsStatus,
+		gc.name 		as categoryName
+	from t_goods g INNER JOIN t_goods_category gc on g.category_id = gc.id
+	<where>
+    	g.deleted = 0
+    	<if test="name != null and name != ''">
+    		and g.name like '%${name}%'
+    	</if>
+    	<if test="goodsNo != null and goodsNo != ''">
+    		and g.goods_no like '%${goodsNo}%'
+    	</if>
+    	<if test="categoryId != null">
+    		and g.category_id = #{categoryId}
+    	</if>
+    	<if test="goodsStatus != null">
+    		and g.goods_status = #{goodsStatus}
+    	</if>
+    </where>
+	order by  g.id
+  </select>
+  
+  
+  
+</mapper>

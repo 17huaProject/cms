@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.sys.dao.UserDao">
+	<resultMap id="userDTOResult" type="com.jeeplus.modules.sys.dto.UserDTO">
+		<id property="id" column="id" />
+		<result property="no" column="no" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="phone" column="phone" />
+		<result property="mobile" column="mobile" />
+		<result property="userType" column="user_type" />
+		<result property="photo" column="photo" />
+	</resultMap> 
+	
+	<select id="select4AutoCompleteByExample" resultMap="userDTOResult" parameterType="java.lang.String">
+	    <if test = "_parameter != null and _parameter != ''">
+	    select  id, no, name, email, phone, mobile, user_type, photo, qrcode
+	    from sys_user
+	    where user_type = 4 and  del_flag = '0'
+	    	 and (name like '%${_parameter}%' or 
+	    	login_name like '%${_parameter}%' or
+	    	phone like '%${_parameter}%' or
+	    	mobile like '%${_parameter}%')
+	   </if>
+  	</select>
+  	
+	<select id="verifyArtists4Event" resultMap="userDTOResult" parameterType="java.util.Map">
+	    select  id
+	    from sys_user
+	    where id='${id}' and  del_flag = '0'
+	    	 and (name like '%${searchParam}%' or 
+	    	phone like '%${searchParam}%' or
+	    	mobile like '%${searchParam}%')
+  	</select>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+	
+	
+</mapper>

@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.EventMapper" >
+  <resultMap id="BaseResultMap" type="com.jeeplus.modules.business.entity.Event" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="event_name" property="eventName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="event_time" property="eventTime" jdbcType="TIMESTAMP" />
+    <result column="closing_time" property="closingTime" jdbcType="TIMESTAMP" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="art_id" property="artId" jdbcType="INTEGER" />
+    <result column="artist_id" property="artistId" jdbcType="INTEGER" />
+    <result column="venue_id" property="venueId" jdbcType="INTEGER" />
+    <result column="capacity" property="capacity" jdbcType="SMALLINT" />
+    <result column="sold" property="sold" jdbcType="SMALLINT" />
+    <result column="event_status" property="eventStatus" jdbcType="VARCHAR" />
+    <result column="view_num" property="viewNum" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="assistant_id" property="assistantId" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_refund" property="isRefund" jdbcType="TINYINT" />
+    <result column="is_delete" property="isDelete" jdbcType="TINYINT" />
+    <result column="is_check" property="isCheck" jdbcType="TINYINT" />
+    <result column="operator_id" property="operatorId" jdbcType="VARCHAR" />
+    <result column="share_desc" property="shareDesc" jdbcType="VARCHAR" />
+    <result column="venue_fee_rate" property="venueFeeRate" jdbcType="DECIMAL" />
+    <result column="venue_fee" property="venueFee" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, event_name, type, event_time, closing_time, city_code, art_id, artist_id, venue_id, 
+    capacity, sold, event_status, view_num, price, assistant_id, remark, create_time, update_time, 
+    is_refund, is_delete, is_check, operator_id,share_desc, venue_fee_rate, venue_fee
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.jeeplus.modules.business.entity.EventExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_events
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_events
+    where id = #{id,jdbcType=INTEGER} and is_delete=0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_events
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.jeeplus.modules.business.entity.EventExample" >
+    delete from t_events
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.jeeplus.modules.business.entity.Event" >
+	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+	   SELECT LAST_INSERT_ID() AS id
+	</selectKey>
+  
+    insert into t_events (id, event_name, type, 
+      event_time, closing_time, city_code, 
+      art_id, artist_id, venue_id, 
+      capacity, sold, event_status, 
+      view_num, price, assistant_id, 
+      remark, create_time, update_time, 
+      is_refund, is_delete, is_check, 
+      operator_id,share_desc, venue_fee_rate, venue_fee)
+    values (#{id,jdbcType=INTEGER}, #{eventName,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{eventTime,jdbcType=TIMESTAMP}, #{closingTime,jdbcType=TIMESTAMP}, #{cityCode,jdbcType=VARCHAR}, 
+      #{artId,jdbcType=INTEGER}, #{artistId,jdbcType=INTEGER}, #{venueId,jdbcType=INTEGER}, 
+      #{capacity,jdbcType=SMALLINT}, #{sold,jdbcType=SMALLINT}, #{eventStatus,jdbcType=VARCHAR}, 
+      #{viewNum,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL}, #{assistantId,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{isRefund,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}, #{isCheck,jdbcType=TINYINT}, 
+      #{operatorId,jdbcType=VARCHAR},#{shareDesc,jdbcType=VARCHAR}, #{venueFeeRate,jdbcType=DECIMAL}, #{venueFee,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jeeplus.modules.business.entity.Event" >
+  	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+	   SELECT LAST_INSERT_ID() AS id
+	</selectKey>
+	
+    insert into t_events
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="eventName != null" >
+        event_name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="eventTime != null" >
+        event_time,
+      </if>
+      <if test="closingTime != null" >
+        closing_time,
+      </if>
+      <if test="cityCode != null" >
+        city_code,
+      </if>
+      <if test="artId != null" >
+        art_id,
+      </if>
+      <if test="artistId != null" >
+        artist_id,
+      </if>
+      <if test="venueId != null" >
+        venue_id,
+      </if>
+      <if test="capacity != null" >
+        capacity,
+      </if>
+      <if test="sold != null" >
+        sold,
+      </if>
+      <if test="eventStatus != null" >
+        event_status,
+      </if>
+      <if test="viewNum != null" >
+        view_num,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="assistantId != null" >
+        assistant_id,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="isRefund != null" >
+        is_refund,
+      </if>
+      <if test="isDelete != null" >
+        is_delete,
+      </if>
+      <if test="isCheck != null" >
+        is_check,
+      </if>
+      <if test="operatorId != null" >
+        operator_id,
+      </if>
+      <if test="shareDesc != null" >
+        share_desc,
+      </if>
+      <if test="venueFeeRate != null" >
+        venue_fee_rate,
+      </if>
+      <if test="venueFee != null" >
+        venue_fee,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="eventName != null" >
+        #{eventName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="eventTime != null" >
+        #{eventTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closingTime != null" >
+        #{closingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="artId != null" >
+        #{artId,jdbcType=INTEGER},
+      </if>
+      <if test="artistId != null" >
+        #{artistId,jdbcType=INTEGER},
+      </if>
+      <if test="venueId != null" >
+        #{venueId,jdbcType=INTEGER},
+      </if>
+      <if test="capacity != null" >
+        #{capacity,jdbcType=SMALLINT},
+      </if>
+      <if test="sold != null" >
+        #{sold,jdbcType=SMALLINT},
+      </if>
+      <if test="eventStatus != null" >
+        #{eventStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="viewNum != null" >
+        #{viewNum,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="assistantId != null" >
+        #{assistantId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isRefund != null" >
+        #{isRefund,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="isCheck != null" >
+        #{isCheck,jdbcType=TINYINT},
+      </if>
+      <if test="operatorId != null" >
+        #{operatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="shareDesc != null" >
+        #{shareDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="venueFeeRate != null" >
+        #{venueFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="venueFee != null" >
+        #{venueFee,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.jeeplus.modules.business.entity.EventExample" resultType="java.lang.Integer" >
+    select count(*) from t_events
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_events
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.eventName != null" >
+        event_name = #{record.eventName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eventTime != null" >
+        event_time = #{record.eventTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.closingTime != null" >
+        closing_time = #{record.closingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.cityCode != null" >
+        city_code = #{record.cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.artId != null" >
+        art_id = #{record.artId,jdbcType=INTEGER},
+      </if>
+      <if test="record.artistId != null" >
+        artist_id = #{record.artistId,jdbcType=INTEGER},
+      </if>
+      <if test="record.venueId != null" >
+        venue_id = #{record.venueId,jdbcType=INTEGER},
+      </if>
+      <if test="record.capacity != null" >
+        capacity = #{record.capacity,jdbcType=SMALLINT},
+      </if>
+      <if test="record.sold != null" >
+        sold = #{record.sold,jdbcType=SMALLINT},
+      </if>
+      <if test="record.eventStatus != null" >
+        event_status = #{record.eventStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.viewNum != null" >
+        view_num = #{record.viewNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.price != null" >
+        price = #{record.price,jdbcType=DECIMAL},
+      </if>
+      <if test="record.assistantId != null" >
+        assistant_id = #{record.assistantId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.isRefund != null" >
+        is_refund = #{record.isRefund,jdbcType=TINYINT},
+      </if>
+      <if test="record.isDelete != null" >
+        is_delete = #{record.isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="record.isCheck != null" >
+        is_check = #{record.isCheck,jdbcType=TINYINT},
+      </if>
+      <if test="record.operatorId != null" >
+        operator_id = #{record.operatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shareDesc != null" >
+        share_desc = #{record.shareDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.venueFeeRate != null" >
+        venue_fee_rate = #{record.venueFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="record.venueFee != null" >
+        venue_fee = #{record.venueFee,jdbcType=DECIMAL},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_events
+    set id = #{record.id,jdbcType=INTEGER},
+      event_name = #{record.eventName,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=VARCHAR},
+      event_time = #{record.eventTime,jdbcType=TIMESTAMP},
+      closing_time = #{record.closingTime,jdbcType=TIMESTAMP},
+      city_code = #{record.cityCode,jdbcType=VARCHAR},
+      art_id = #{record.artId,jdbcType=INTEGER},
+      artist_id = #{record.artistId,jdbcType=INTEGER},
+      venue_id = #{record.venueId,jdbcType=INTEGER},
+      capacity = #{record.capacity,jdbcType=SMALLINT},
+      sold = #{record.sold,jdbcType=SMALLINT},
+      event_status = #{record.eventStatus,jdbcType=VARCHAR},
+      view_num = #{record.viewNum,jdbcType=INTEGER},
+      price = #{record.price,jdbcType=DECIMAL},
+      assistant_id = #{record.assistantId,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      is_refund = #{record.isRefund,jdbcType=TINYINT},
+      is_delete = #{record.isDelete,jdbcType=TINYINT},
+      is_check = #{record.isCheck,jdbcType=TINYINT},
+      operator_id = #{record.operatorId,jdbcType=VARCHAR},
+      share_desc = #{record.shareDesc,jdbcType=VARCHAR},
+      venue_fee_rate = #{record.venueFeeRate,jdbcType=DECIMAL},
+      venue_fee = #{record.venueFee,jdbcType=DECIMAL}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jeeplus.modules.business.entity.Event" >
+    update t_events
+    <set >
+      <if test="eventName != null" >
+        event_name = #{eventName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="eventTime != null" >
+        event_time = #{eventTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closingTime != null" >
+        closing_time = #{closingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="artId != null" >
+        art_id = #{artId,jdbcType=INTEGER},
+      </if>
+      <if test="artistId != null" >
+        artist_id = #{artistId,jdbcType=INTEGER},
+      </if>
+      <if test="venueId != null" >
+        venue_id = #{venueId,jdbcType=INTEGER},
+      </if>
+      <if test="capacity != null" >
+        capacity = #{capacity,jdbcType=SMALLINT},
+      </if>
+      <if test="sold != null" >
+        sold = #{sold,jdbcType=SMALLINT},
+      </if>
+      <if test="eventStatus != null" >
+        event_status = #{eventStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="viewNum != null" >
+        view_num = #{viewNum,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="assistantId != null" >
+        assistant_id = #{assistantId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isRefund != null" >
+        is_refund = #{isRefund,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null" >
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="isCheck != null" >
+        is_check = #{isCheck,jdbcType=TINYINT},
+      </if>
+      <if test="operatorId != null" >
+        operator_id = #{operatorId,jdbcType=VARCHAR},
+      </if>
+      <if test="shareDesc != null" >
+        share_desc = #{shareDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="venueFeeRate != null" >
+        venue_fee_rate = #{venueFeeRate,jdbcType=DECIMAL},
+      </if>
+      <if test="venueFee != null" >
+        venue_fee = #{venueFee,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jeeplus.modules.business.entity.Event" >
+    update t_events
+    set event_name = #{eventName,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      event_time = #{eventTime,jdbcType=TIMESTAMP},
+      closing_time = #{closingTime,jdbcType=TIMESTAMP},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      art_id = #{artId,jdbcType=INTEGER},
+      artist_id = #{artistId,jdbcType=INTEGER},
+      venue_id = #{venueId,jdbcType=INTEGER},
+      capacity = #{capacity,jdbcType=SMALLINT},
+      sold = #{sold,jdbcType=SMALLINT},
+      event_status = #{eventStatus,jdbcType=VARCHAR},
+      view_num = #{viewNum,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL},
+      assistant_id = #{assistantId,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_refund = #{isRefund,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      is_check = #{isCheck,jdbcType=TINYINT},
+      operator_id = #{operatorId,jdbcType=VARCHAR},
+      share_desc = #{shareDesc,jdbcType=VARCHAR},
+      venue_fee_rate = #{venueFeeRate,jdbcType=DECIMAL},
+      venue_fee = #{venueFee,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="deleteByPrimaryKeyLogic" parameterType="com.jeeplus.modules.business.entity.Event" >
+    update t_events
+    set 
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      operator_id = #{operatorId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

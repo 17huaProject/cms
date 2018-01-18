@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.EventMapper" >
+  <resultMap id="ListResultMap" type="com.jeeplus.modules.business.dto.EventDTO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="event_name" property="eventName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="event_time" property="eventTime" jdbcType="TIMESTAMP" />
+    <result column="closing_time" property="closingTime" jdbcType="TIMESTAMP" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="art_id" property="artId" jdbcType="INTEGER" />
+    <result column="artist_id" property="artistId" jdbcType="INTEGER" />
+    <result column="venue_id" property="venueId" jdbcType="INTEGER" />
+    <result column="capacity" property="capacity" jdbcType="SMALLINT" />
+    <result column="sold" property="sold" jdbcType="SMALLINT" />
+    <result column="event_status" property="eventStatus" jdbcType="VARCHAR" />
+    <result column="view_num" property="viewNum" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="assistant_id" property="assistantId" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="is_refund" property="isRefund" jdbcType="TINYINT" />
+    <result column="is_delete" property="isDelete" jdbcType="TINYINT" />
+    <result column="is_check" property="isCheck" jdbcType="TINYINT" />
+    <result column="operator_id" property="operatorId" jdbcType="VARCHAR" />
+    <result column="event_desc" property="eventDesc" jdbcType="VARCHAR" />
+    <result column="keywords" property="keywords" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    <result column="share_desc" property="shareDesc" jdbcType="VARCHAR" />
+    <result column="venue_fee_rate" property="venueFeeRate" jdbcType="DECIMAL" />
+    <result column="venue_fee" property="venueFee" jdbcType="DECIMAL" />
+  </resultMap>
+  
+  <sql id="detail_Column_List" >
+    id, event_name, type, event_time, closing_time, city_code, art_id, artist_id, venue_id, 
+    capacity, sold, event_status, t_events.view_num, price, assistant_id, remark, create_time, update_time, 
+    is_refund, is_delete, is_check, operator_id, share_desc, venue_fee_rate, venue_fee
+  </sql>
+  
+  <select id="listEventsByExample" resultMap="ListResultMap" parameterType="com.jeeplus.modules.business.entity.EventExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="detail_Column_List" />
+    from t_events inner join t_event_detail on t_events.id = t_event_detail.event_id
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+  <select id="listEvents" resultType="com.jeeplus.modules.business.dto.EventDTO" >
+    select
+	    e.id				as id, 
+	    e.event_name		as eventName, 
+	    e.type				as type, 
+	    e.event_time		as eventTime, 
+	    e.closing_time		as closingTime, 
+	    e.city_code			as cityCode, 
+	    e.capacity			as capacity, 
+	    e.sold				as sold, 
+	    e.event_status		as eventStatus, 
+	    e.view_num			as viewNum, 
+	    e.price				as price, 
+	    e.create_time		as createTime, 
+	    e.update_time		as updateTime, 
+	    e.is_check			as isCheck ,
+		cs.status 			as vunueSettleStatus
+    from t_events e
+		inner join t_event_detail ed on e.id = ed.event_id
+		left JOIN t_commission_settlement  cs on e.id = cs.event_id
+    <where>
+    	e.is_delete = 0
+    	<if test="eventName != null and eventName != ''">
+    		and e.event_name like '%${eventName}%'
+    	</if>
+    	<if test="eventStatus != null and eventStatus != ''">
+    		and e.event_status like '%${eventStatus}%'
+    	</if>
+    	<if test="cityCode != null and cityCode != ''">
+    		and e.city_code = #{cityCode}
+    	</if>
+    	<if test="type != null and type != ''">
+    		and e.type = #{type}
+    	</if>
+    	<if test="eventStateTime != null">
+    		and e.event_time &gt;= #{eventStateTime}
+    	</if>
+    	<if test="eventEndTime != null">
+    		and e.event_time &lt;= #{eventEndTime}
+    	</if>
+    	<if test="closingStateTime != null">
+    		and e.closing_time &gt;= #{closingStateTime}
+    	</if>
+    	<if test="closingEndTime != null">
+    		and e.closing_time &lt;= #{closingEndTime}
+    	</if>
+    	<if test="isCheck != null">
+    		and e.is_check = #{isCheck}
+    	</if>
+    </where>
+      order by e.is_check , e.event_time desc
+  </select>
+  
+  <select id="listEvents4MaterialDelivery" resultMap="ListResultMap" parameterType="com.jeeplus.modules.business.entity.EventExample" >
+	SELECT 
+		id , event_name as eventName , event_time as eventTime
+	from t_events as e
+	where 
+		(event_status = 'ONSALE' or event_status = 'SOLDOUT')
+		and  e.event_time between  now()  and (NOW() + interval 24 hour)
+		and  e.id not in (SELECT DISTINCT event_id from t_material_delivery  where event_id is not null) 
+  </select>
+  
+  <select id="selectWorkTableEventInfo" resultType="com.jeeplus.modules.business.dto.WorkTableDTO" >
+	SELECT 'event' as owner , event_status as type , count(*) as count , event_status as status from t_events where is_delete=0 group by event_status
+	UNION
+	SELECT 'event' as owner , 'uncheck' as type , count(*) as count , 'uncheck' as status  from t_events  where is_check=0 and is_delete=0
+	UNION
+	SELECT 'custom' as owner , 'uncheck' as type , count(*) as count , status from t_user_custom where status=0
+  </select>
+  
+  <select id="getEventassociatedInfo" parameterType="java.lang.Integer" resultType="com.jeeplus.modules.business.dto.EventInfoDTO" >
+	SELECT 
+		e.id 			as eventId,
+		e.event_name 	as eventName,
+		e.type 			as type,
+		e.event_time 	as eventTime,
+		e.closing_time 	as closingTime,
+		e.city_code 	as cityCode,
+		e.capacity 		as capacity,
+		e.event_status 	as eventStatus,
+		e.price 		as price,
+		a.id 			as artistId,
+		a.artist_name 	as artistName,
+		a.phone 		as artistPhone ,
+		a.city 			as artistCity ,
+		v.id 			as venueId ,
+		v.venue_name 	as venueName ,
+		v.address 		as venueAddress ,
+		v.contact 		as venueContact ,
+		v.phone 		as venuePhone ,
+		ass.id 			as assistantId ,
+		ass.`name` 		as assistantName ,
+		ass.phone 		as assistantPhone ,
+		art.id 			as artId ,
+		art.art_name	as artName ,
+		art.big_img		as artImg
+	from t_events e
+		LEFT JOIN t_artists a on e.artist_id = a.id
+		LEFT JOIN t_arts art on e.art_id = art.id
+		LEFT JOIN sys_user ass on e.assistant_id = ass.id
+		LEFT JOIN t_venues v on e.venue_id = v.id
+	where e.id = #{id}
+  </select>
+  
+  
+  
+</mapper>

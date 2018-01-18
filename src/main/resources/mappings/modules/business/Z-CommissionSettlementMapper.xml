@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.CommissionSettlementMapper" >
+   
+   <select id="selectSettlements4Venue" parameterType="java.lang.Integer" resultType="com.jeeplus.modules.business.dto.VenueSettlementDTO">
+	   SELECT 
+			e.event_name as eventName ,
+			e.price as price ,
+			e.capacity as capacity ,
+			cs.fee_rate as feeRate ,
+			cs.fee as fee ,
+			(case when cs.`status`=1 then '已结算' when cs.`status`=0 then '未结算' end) as status,
+			cs.create_time as createTime ,
+			u.name as name 
+		from t_commission_settlement cs 
+			INNER JOIN t_events e on cs.event_id = e.id
+			INNER JOIN sys_user u on cs.operator_id = u.id 
+		where cs.toller_type = 3 and cs.status = 1 and cs.toller_id = #{id}
+   </select>
+   
+   
+   
+</mapper>

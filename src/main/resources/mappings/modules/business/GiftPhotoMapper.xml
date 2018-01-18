@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.GiftPhotoMapper" >
+  <resultMap id="BaseResultMap" type="com.jeeplus.modules.business.entity.GiftPhoto" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="photo_name" property="photoName" jdbcType="VARCHAR" />
+    <result column="big_img" property="bigImg" jdbcType="VARCHAR" />
+    <result column="small_img" property="smallImg" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, photo_name, big_img, small_img, status, sort
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.jeeplus.modules.business.entity.GiftPhotoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_gift_photo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_gift_photo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_gift_photo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.jeeplus.modules.business.entity.GiftPhotoExample" >
+    delete from t_gift_photo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.jeeplus.modules.business.entity.GiftPhoto" >
+    insert into t_gift_photo (id, photo_name, big_img, 
+      small_img, status, sort
+      )
+    values (#{id,jdbcType=INTEGER}, #{photoName,jdbcType=VARCHAR}, #{bigImg,jdbcType=VARCHAR}, 
+      #{smallImg,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{sort,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jeeplus.modules.business.entity.GiftPhoto" >
+    insert into t_gift_photo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="photoName != null" >
+        photo_name,
+      </if>
+      <if test="bigImg != null" >
+        big_img,
+      </if>
+      <if test="smallImg != null" >
+        small_img,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="photoName != null" >
+        #{photoName,jdbcType=VARCHAR},
+      </if>
+      <if test="bigImg != null" >
+        #{bigImg,jdbcType=VARCHAR},
+      </if>
+      <if test="smallImg != null" >
+        #{smallImg,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.jeeplus.modules.business.entity.GiftPhotoExample" resultType="java.lang.Integer" >
+    select count(*) from t_gift_photo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_gift_photo
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.photoName != null" >
+        photo_name = #{record.photoName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bigImg != null" >
+        big_img = #{record.bigImg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.smallImg != null" >
+        small_img = #{record.smallImg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.sort != null" >
+        sort = #{record.sort,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_gift_photo
+    set id = #{record.id,jdbcType=INTEGER},
+      photo_name = #{record.photoName,jdbcType=VARCHAR},
+      big_img = #{record.bigImg,jdbcType=VARCHAR},
+      small_img = #{record.smallImg,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=TINYINT},
+      sort = #{record.sort,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jeeplus.modules.business.entity.GiftPhoto" >
+    update t_gift_photo
+    <set >
+      <if test="photoName != null" >
+        photo_name = #{photoName,jdbcType=VARCHAR},
+      </if>
+      <if test="bigImg != null" >
+        big_img = #{bigImg,jdbcType=VARCHAR},
+      </if>
+      <if test="smallImg != null" >
+        small_img = #{smallImg,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jeeplus.modules.business.entity.GiftPhoto" >
+    update t_gift_photo
+    set photo_name = #{photoName,jdbcType=VARCHAR},
+      big_img = #{bigImg,jdbcType=VARCHAR},
+      small_img = #{smallImg,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      sort = #{sort,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

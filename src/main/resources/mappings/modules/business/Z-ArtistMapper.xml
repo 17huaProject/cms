@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.ArtistMapper" >
+  <resultMap id="DtoBaseResultMap" type="com.jeeplus.modules.business.dto.ArtistDTO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="artist_name" property="artistName" jdbcType="VARCHAR" />
+    <result column="avatar" property="avatar" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="big_img" property="bigImg" jdbcType="VARCHAR" />
+    <result column="small_img" property="smallImg" jdbcType="VARCHAR" />
+    <result column="artist_level" property="artistLevel" jdbcType="VARCHAR" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="realname" property="realname" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="TINYINT" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="school" property="school" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="VARCHAR" />
+    <result column="is_check" property="isCheck" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+  </resultMap>
+  
+  
+  <sql id="Dto_Base_Column_List" >
+    id, artist_name, avatar, phone, email, big_img, small_img, artist_level, province_code, 
+    city_code, city, realname, idcard, gender, address, school, birthday, is_check, status
+  </sql>
+  
+  <select id="select4AutoCompleteByExample" resultMap="DtoBaseResultMap" parameterType="com.jeeplus.modules.business.entity.ArtistExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Dto_Base_Column_List" />
+    from t_artists
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+  <select id="selectArtistBySysUserId" resultMap="DtoBaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+		a.id as id, 
+		artist_name as artistName, 
+		avatar, 
+		phone ,
+		realname as realname
+    from t_sysuser_artist as u INNER JOIN t_artists as a on u.artist_id = a.id 
+    where u.sys_user_id = #{_parameter}
+  </select>
+  
+  
+  <select id="selectWorkTableArtistInfo" resultType="com.jeeplus.modules.business.dto.WorkTableDTO" >
+    SELECT 'artist' as owner , 'uncheck' as type , count(*) as count , is_check as status from t_artists where is_check=0 and `status`=1
+    UNION
+    SELECT 'artist' as owner , 'checked' as type , count(*) as count , is_check as status from t_artists where is_check=1 and `status`=1
+  </select>
+  
+  <select id="select4List" resultType="com.jeeplus.modules.business.entity.Artist">
+    select
+		id				as id, 
+		artist_name		as artistName,
+		avatar			as avatar,
+		phone			as phone, 
+		email			as email, 
+		big_img			as bigImg, 
+		artist_level	as artistLevel, 
+		city			as city, 
+		realname		as realname, 
+		idcard			as idcard, 
+		gender			as gender, 
+		address			as address, 
+		school			as school, 
+		birthday		as birthday, 
+		create_time		as createTime, 
+     	is_check		as isCheck, 
+     	status			as status
+    from t_artists
+    <where>
+    	<if test="realname != null and realname != ''">
+    		and realname like '%${realname}%'
+    	</if>
+    	<if test="idcard != null and idcard != ''">
+    		and idcard like '%${idcard}%'
+    	</if>
+    	<if test="gender != null">
+    		and gender = #{gender}
+    	</if>
+    	<if test="provinceCode != null">
+    		and province_code = #{provinceCode}
+    	</if>
+    	<if test="cityCode != null">
+    		and city_code = #{cityCode}
+    	</if>
+    	<if test="isCheck != null">
+    		and is_check = #{isCheck}
+    	</if>
+	</where>
+    order by id
+  </select>
+  
+  
+  
+</mapper>

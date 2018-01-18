@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.GiftMapper" >
+
+  <update id="deleteLogicalByPrimaryKey" parameterType="java.lang.String" >
+    update t_gifts 
+    set deleted = 1
+    where gift_id = #{_parameter}
+  </update>
+  
+  <update id="deleteLogicalByExample" parameterType="com.jeeplus.modules.business.entity.GiftExample" >
+    update t_gifts
+    set deleted = 1
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </update>
+  
+  <select id="select4List" resultType="com.jeeplus.modules.business.entity.Gift" >
+    select
+   		gift_id			as giftId, 
+   		user_id			as userId, 
+   		gift_name		as giftName, 
+   		receiver_id		as receiverId, 
+   		sender			as sender, 
+   		receiver		as receiver, 
+   		price			as price, 
+    	number			as number, 
+    	order_amount	as orderAmount, 
+    	create_time		as createTime, 
+    	expiry_time		as expiryTime, 
+    	gift_status		as giftStatus, 
+    	received_time	as receivedTime, 
+    	update_time		as updateTime
+    from t_gifts
+    <where>
+    	deleted = 0
+    	<if test="giftName != null and giftName != ''">
+    		and gift_name like '%${giftName}%'
+    	</if>
+    	<if test="giftStatus != null and giftStatus != ''">
+    		and gift_status like '%${giftStatus}%'
+    	</if>
+    	<if test="createStateTime != null">
+    		and create_time &gt;= #{createStateTime}
+    	</if>
+    	<if test="createEndTime != null">
+    		and create_time &lt;= #{createEndTime}
+    	</if>
+    </where>
+      order by create_time desc
+  </select>
+
+ 
+</mapper>

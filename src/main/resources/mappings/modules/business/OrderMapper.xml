@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.jeeplus.modules.business.entity.Order" >
+    <id column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="order_name" property="orderName" jdbcType="VARCHAR" />
+    <result column="order_img" property="orderImg" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="event_id" property="eventId" jdbcType="INTEGER" />
+    <result column="art_id" property="artId" jdbcType="INTEGER" />
+    <result column="artist_id" property="artistId" jdbcType="INTEGER" />
+    <result column="venue_id" property="venueId" jdbcType="INTEGER" />
+    <result column="cost_price" property="costPrice" jdbcType="DECIMAL" />
+    <result column="sale_price" property="salePrice" jdbcType="DECIMAL" />
+    <result column="event_time" property="eventTime" jdbcType="TIMESTAMP" />
+    <result column="number" property="number" jdbcType="DECIMAL" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="order_amount" property="orderAmount" jdbcType="DECIMAL" />
+    <result column="balance_amount" property="balanceAmount" jdbcType="DECIMAL" />
+    <result column="paid_amount" property="paidAmount" jdbcType="DECIMAL" />
+    <result column="coupon_amount" property="couponAmount" jdbcType="DECIMAL" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="qrcode" property="qrcode" jdbcType="VARCHAR" />
+    <result column="realname" property="realname" jdbcType="VARCHAR" />
+    <result column="use_phone" property="usePhone" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="is_delete" property="isDelete" jdbcType="TINYINT" />
+    <result column="paid_id" property="paidId" jdbcType="VARCHAR" />
+    <result column="refund_id" property="refundId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    order_id, order_name, order_img, user_id, event_id, art_id, artist_id, venue_id, 
+    cost_price, sale_price, event_time, number, create_time, order_amount, balance_amount, 
+    paid_amount, coupon_amount, update_time, status, qrcode, realname, use_phone, 
+    source, remark, is_delete, paid_id, refund_id
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.jeeplus.modules.business.entity.OrderExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_orders
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_orders
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_orders
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.jeeplus.modules.business.entity.OrderExample" >
+    delete from t_orders
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.jeeplus.modules.business.entity.Order" >
+    insert into t_orders (order_id, order_name, order_img, 
+      user_id, event_id, art_id, 
+      artist_id, venue_id, cost_price, 
+      sale_price, event_time, number, 
+      create_time, order_amount, balance_amount, 
+      paid_amount, coupon_amount, update_time, 
+      status, qrcode, realname, 
+      use_phone, source, 
+      remark, is_delete, paid_id, 
+      refund_id)
+    values (#{orderId,jdbcType=VARCHAR}, #{orderName,jdbcType=VARCHAR}, #{orderImg,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=VARCHAR}, #{eventId,jdbcType=INTEGER}, #{artId,jdbcType=INTEGER}, 
+      #{artistId,jdbcType=INTEGER}, #{venueId,jdbcType=INTEGER}, #{costPrice,jdbcType=DECIMAL}, 
+      #{salePrice,jdbcType=DECIMAL}, #{eventTime,jdbcType=TIMESTAMP}, #{number,jdbcType=DECIMAL}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{orderAmount,jdbcType=DECIMAL}, #{balanceAmount,jdbcType=DECIMAL}, 
+      #{paidAmount,jdbcType=DECIMAL}, #{couponAmount,jdbcType=DECIMAL}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=VARCHAR}, #{qrcode,jdbcType=VARCHAR}, #{realname,jdbcType=VARCHAR}, 
+      #{usePhone,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{isDelete,jdbcType=TINYINT}, #{paidId,jdbcType=VARCHAR}, 
+      #{refundId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jeeplus.modules.business.entity.Order" >
+    insert into t_orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="orderName != null" >
+        order_name,
+      </if>
+      <if test="orderImg != null" >
+        order_img,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="eventId != null" >
+        event_id,
+      </if>
+      <if test="artId != null" >
+        art_id,
+      </if>
+      <if test="artistId != null" >
+        artist_id,
+      </if>
+      <if test="venueId != null" >
+        venue_id,
+      </if>
+      <if test="costPrice != null" >
+        cost_price,
+      </if>
+      <if test="salePrice != null" >
+        sale_price,
+      </if>
+      <if test="eventTime != null" >
+        event_time,
+      </if>
+      <if test="number != null" >
+        number,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="orderAmount != null" >
+        order_amount,
+      </if>
+      <if test="balanceAmount != null" >
+        balance_amount,
+      </if>
+      <if test="paidAmount != null" >
+        paid_amount,
+      </if>
+      <if test="couponAmount != null" >
+        coupon_amount,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="qrcode != null" >
+        qrcode,
+      </if>
+      <if test="realname != null" >
+        realname,
+      </if>
+      <if test="usePhone != null" >
+        use_phone,
+      </if>
+      <if test="source != null" >
+        source,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="isDelete != null" >
+        is_delete,
+      </if>
+      <if test="paidId != null" >
+        paid_id,
+      </if>
+      <if test="refundId != null" >
+        refund_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderName != null" >
+        #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderImg != null" >
+        #{orderImg,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="eventId != null" >
+        #{eventId,jdbcType=INTEGER},
+      </if>
+      <if test="artId != null" >
+        #{artId,jdbcType=INTEGER},
+      </if>
+      <if test="artistId != null" >
+        #{artistId,jdbcType=INTEGER},
+      </if>
+      <if test="venueId != null" >
+        #{venueId,jdbcType=INTEGER},
+      </if>
+      <if test="costPrice != null" >
+        #{costPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="salePrice != null" >
+        #{salePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="eventTime != null" >
+        #{eventTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="number != null" >
+        #{number,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderAmount != null" >
+        #{orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="balanceAmount != null" >
+        #{balanceAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="paidAmount != null" >
+        #{paidAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="couponAmount != null" >
+        #{couponAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcode != null" >
+        #{qrcode,jdbcType=VARCHAR},
+      </if>
+      <if test="realname != null" >
+        #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="usePhone != null" >
+        #{usePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="paidId != null" >
+        #{paidId,jdbcType=VARCHAR},
+      </if>
+      <if test="refundId != null" >
+        #{refundId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.jeeplus.modules.business.entity.OrderExample" resultType="java.lang.Integer" >
+    select count(*) from t_orders
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_orders
+    <set >
+      <if test="record.orderId != null" >
+        order_id = #{record.orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderName != null" >
+        order_name = #{record.orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderImg != null" >
+        order_img = #{record.orderImg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.eventId != null" >
+        event_id = #{record.eventId,jdbcType=INTEGER},
+      </if>
+      <if test="record.artId != null" >
+        art_id = #{record.artId,jdbcType=INTEGER},
+      </if>
+      <if test="record.artistId != null" >
+        artist_id = #{record.artistId,jdbcType=INTEGER},
+      </if>
+      <if test="record.venueId != null" >
+        venue_id = #{record.venueId,jdbcType=INTEGER},
+      </if>
+      <if test="record.costPrice != null" >
+        cost_price = #{record.costPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.salePrice != null" >
+        sale_price = #{record.salePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.eventTime != null" >
+        event_time = #{record.eventTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.number != null" >
+        number = #{record.number,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.orderAmount != null" >
+        order_amount = #{record.orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.balanceAmount != null" >
+        balance_amount = #{record.balanceAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.paidAmount != null" >
+        paid_amount = #{record.paidAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.couponAmount != null" >
+        coupon_amount = #{record.couponAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qrcode != null" >
+        qrcode = #{record.qrcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.realname != null" >
+        realname = #{record.realname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.usePhone != null" >
+        use_phone = #{record.usePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.source != null" >
+        source = #{record.source,jdbcType=VARCHAR},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isDelete != null" >
+        is_delete = #{record.isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="record.paidId != null" >
+        paid_id = #{record.paidId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.refundId != null" >
+        refund_id = #{record.refundId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_orders
+    set order_id = #{record.orderId,jdbcType=VARCHAR},
+      order_name = #{record.orderName,jdbcType=VARCHAR},
+      order_img = #{record.orderImg,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=VARCHAR},
+      event_id = #{record.eventId,jdbcType=INTEGER},
+      art_id = #{record.artId,jdbcType=INTEGER},
+      artist_id = #{record.artistId,jdbcType=INTEGER},
+      venue_id = #{record.venueId,jdbcType=INTEGER},
+      cost_price = #{record.costPrice,jdbcType=DECIMAL},
+      sale_price = #{record.salePrice,jdbcType=DECIMAL},
+      event_time = #{record.eventTime,jdbcType=TIMESTAMP},
+      number = #{record.number,jdbcType=DECIMAL},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      order_amount = #{record.orderAmount,jdbcType=DECIMAL},
+      balance_amount = #{record.balanceAmount,jdbcType=DECIMAL},
+      paid_amount = #{record.paidAmount,jdbcType=DECIMAL},
+      coupon_amount = #{record.couponAmount,jdbcType=DECIMAL},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=VARCHAR},
+      qrcode = #{record.qrcode,jdbcType=VARCHAR},
+      realname = #{record.realname,jdbcType=VARCHAR},
+      use_phone = #{record.usePhone,jdbcType=VARCHAR},
+      source = #{record.source,jdbcType=VARCHAR},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      is_delete = #{record.isDelete,jdbcType=TINYINT},
+      paid_id = #{record.paidId,jdbcType=VARCHAR},
+      refund_id = #{record.refundId,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jeeplus.modules.business.entity.Order" >
+    update t_orders
+    <set >
+      <if test="orderName != null" >
+        order_name = #{orderName,jdbcType=VARCHAR},
+      </if>
+      <if test="orderImg != null" >
+        order_img = #{orderImg,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="eventId != null" >
+        event_id = #{eventId,jdbcType=INTEGER},
+      </if>
+      <if test="artId != null" >
+        art_id = #{artId,jdbcType=INTEGER},
+      </if>
+      <if test="artistId != null" >
+        artist_id = #{artistId,jdbcType=INTEGER},
+      </if>
+      <if test="venueId != null" >
+        venue_id = #{venueId,jdbcType=INTEGER},
+      </if>
+      <if test="costPrice != null" >
+        cost_price = #{costPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="salePrice != null" >
+        sale_price = #{salePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="eventTime != null" >
+        event_time = #{eventTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="number != null" >
+        number = #{number,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderAmount != null" >
+        order_amount = #{orderAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="balanceAmount != null" >
+        balance_amount = #{balanceAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="paidAmount != null" >
+        paid_amount = #{paidAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="couponAmount != null" >
+        coupon_amount = #{couponAmount,jdbcType=DECIMAL},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="qrcode != null" >
+        qrcode = #{qrcode,jdbcType=VARCHAR},
+      </if>
+      <if test="realname != null" >
+        realname = #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="usePhone != null" >
+        use_phone = #{usePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null" >
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null" >
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="paidId != null" >
+        paid_id = #{paidId,jdbcType=VARCHAR},
+      </if>
+      <if test="refundId != null" >
+        refund_id = #{refundId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jeeplus.modules.business.entity.Order" >
+    update t_orders
+    set order_name = #{orderName,jdbcType=VARCHAR},
+      order_img = #{orderImg,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      event_id = #{eventId,jdbcType=INTEGER},
+      art_id = #{artId,jdbcType=INTEGER},
+      artist_id = #{artistId,jdbcType=INTEGER},
+      venue_id = #{venueId,jdbcType=INTEGER},
+      cost_price = #{costPrice,jdbcType=DECIMAL},
+      sale_price = #{salePrice,jdbcType=DECIMAL},
+      event_time = #{eventTime,jdbcType=TIMESTAMP},
+      number = #{number,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      order_amount = #{orderAmount,jdbcType=DECIMAL},
+      balance_amount = #{balanceAmount,jdbcType=DECIMAL},
+      paid_amount = #{paidAmount,jdbcType=DECIMAL},
+      coupon_amount = #{couponAmount,jdbcType=DECIMAL},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      qrcode = #{qrcode,jdbcType=VARCHAR},
+      realname = #{realname,jdbcType=VARCHAR},
+      use_phone = #{usePhone,jdbcType=VARCHAR},
+      source = #{source,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      paid_id = #{paidId,jdbcType=VARCHAR},
+      refund_id = #{refundId,jdbcType=VARCHAR}
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+</mapper>

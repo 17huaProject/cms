@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.ArticleMapper" >
+  
+  <select id="select4List" resultType="com.jeeplus.modules.business.entity.Article">
+    select
+    	article_id		as articleId, 
+    	title			as title,
+    	header_img		as headerImg, 
+    	author			as author, 
+    	keywords		as keywords, 
+    	is_open			as isOpen, 
+    	create_time		as createTime,  
+    	open_type		as openType
+    from t_articles
+    <where>
+    	<if test="title != null and title != ''">
+    		and title like '%${title}%'
+    	</if>
+    	<if test="author != null and author != ''">
+    		and author like '%${author}%'
+    	</if>
+    	<if test="catId != null">
+    		and cat_id = #{catId}
+    	</if>
+    	<if test="isOpen != null">
+    		and is_open = #{isOpen}
+    	</if>
+    	<if test="openType != null">
+    		and open_type = #{openType}
+    	</if>
+    </where>
+    order by create_time
+  </select>  
+  
+  
+  
+  
+  
+  
+</mapper>

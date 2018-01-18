@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.FeedbackMapper" >
+
+  <select id="select4List" resultType="com.jeeplus.modules.business.entity.Feedback" >
+    select
+    	 id				as id, 
+    	 issuer_id		as issuerId, 
+    	 title			as title, 
+    	 issue_time		as issueTime, 
+    	 replier_id		as replierId, 
+    	 reply_time		as replyTime, 
+    	status			as status
+    from t_feedback
+    <where>
+    	<if test="status != null and status != ''">
+    		and status = #{status}
+    	</if>
+    	<if test="stateTime != null">
+    		and issue_time &gt;= #{stateTime}
+    	</if>
+    	<if test="endTime != null">
+    		and issue_time &lt;= #{endTime}
+    	</if>
+    </where>
+    order by issue_time desc
+  </select>
+
+  <select id="selectUndealFeedbacks" resultType="com.jeeplus.modules.business.dto.FeedbackDTO" >
+ 	select
+    	 id				as id, 
+    	 title			as title, 
+    	 content		as content, 
+    	 issue_time		as issueTime, 
+    	 status			as status
+    from t_feedback
+    where status = 0
+    order by issue_time desc
+  </select>
+
+
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.OrderMapper" >
+    
+  <select id="selectOrderSummayDayOfMonth" resultType="com.jeeplus.modules.business.bo.OrderSummaryBO" parameterType="java.util.Map">
+		SELECT 
+			sum(o.number) 						as 'sumNumber' ,
+			sum(op.order_amount) 				as 'sumOrderAmount' ,
+			op.pay_time 						as 'payDate'  
+		from t_orders o 
+			INNER JOIN t_order_paid op on o.order_id = op.order_id 
+			INNER JOIN t_events e on o.event_id = e.id
+		where (o.`status` = 'SUCCESS' or o.`status` = 'FINISH' or o.`status` = 'PENDING')
+			<if test="#{querySqlTime != null and querySqlTime != '' }">
+			and ${querySqlTime}
+			</if>
+		GROUP BY DATE_FORMAT( op.pay_time, '%Y%m%d' )
+		ORDER BY op.pay_time
+  </select>
+  
+  <select id="selectOrderItems" resultType="com.jeeplus.modules.business.bo.OrderItemsExcelBO" parameterType="java.util.Map">
+		SELECT 
+			e.event_name 	as 'eventName' ,
+			e.event_time 	as 'eventTime' ,
+			o.order_id 		as 'orderId' , 
+			o.order_name  	as 'orderName' , 
+			(CASE WHEN o.order_type = 'GOODS' THEN '商品'
+					  WHEN o.order_type = 'COMMON' THEN '活动' END) as 'orderType' ,
+			o.number 		as 'number' ,
+			o.cost_price 	as 'costPrice' ,
+			o.sale_price 	as 'salePrice' ,
+			op.order_amount as 'orderAmount' ,
+			op.paid_amount 	as 'paidAmount' ,
+			op.balance_amount 	as 'balanceAmount' ,
+			op.coupon_amount 	as 'couponAmount' ,
+			op.pay_bank 	as 'payBank' ,
+			op.pay_time 	as 'payTime' ,
+			op.pay_trace_no as 'payTraceNo' ,
+			(CASE WHEN o.`status` = 'SUCCESS' THEN '已付款'
+					  WHEN o.`status` = 'PENDING' THEN '待评价'
+						WHEN o.`status` = 'FINISH' THEN '已评价' END) as 'status'  
+		from t_orders o 
+			INNER JOIN t_order_paid op on o.order_id = op.order_id 
+			INNER JOIN t_events e on o.event_id = e.id
+		where (o.`status` = 'SUCCESS' or o.`status` = 'FINISH' or o.`status` = 'PENDING')
+			<if test="#{querySqlTime != null and querySqlTime != '' }">
+			and ${querySqlTime}
+			</if>
+		ORDER BY e.id
+  </select>
+  
+  <select id="selectOrdersSummary" resultType="com.jeeplus.modules.business.bo.OrderSummaryBO" >
+		SELECT 
+			sum(o.number) 			as 'sumNumber' ,
+			sum(op.order_amount) 	as 'sumOrderAmount' ,
+			sum(op.paid_amount) 	as 'sumPaidAmount' ,
+			sum(op.balance_amount)	as 'sumBalanceAmount' ,
+			sum(op.coupon_amount) 	as 'sumCouponAmount' 
+		from t_orders o 
+			INNER JOIN t_order_paid op on o.order_id = op.order_id 
+			INNER JOIN t_events e on o.event_id = e.id
+		where (o.`status` = 'SUCCESS' or o.`status` = 'FINISH' or o.`status` = 'PENDING')
+			<if test="#{querySqlTime != null and querySqlTime != '' }">
+			and ${querySqlTime}
+			</if>
+  </select>
+  
+  <select id="selectWorkTableOrderInfo" resultType="com.jeeplus.modules.business.dto.WorkTableDTO" >
+	SELECT 'order' as owner ,'today' as type, count(*) as count , status , sum(paid_amount) as sumPaidAmount from t_order_paid where  pay_status = 'SUCC' and to_days(pay_time) = to_days(now())
+	UNION
+	SELECT 'order' as owner ,'yesterday' as type,count(*) as count , status , sum(paid_amount) as sumPaidAmount from t_order_paid where  pay_status = 'SUCC' and TO_DAYS(NOW( )) - TO_DAYS(pay_time) = 1
+	UNION
+	SELECT 'order' as owner ,'week' as type,count(*) as count , status , sum(paid_amount) as sumPaidAmount from t_order_paid where  pay_status = 'SUCC' and YEARWEEK(date_format(pay_time,'%Y-%m-%d')) = YEARWEEK(now())
+	UNION	
+    SELECT 'order' as owner ,'month' as type,count(*) as count , status , sum(paid_amount) as sumPaidAmount from t_order_paid where  pay_status = 'SUCC' and DATE_FORMAT( pay_time, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+  </select>
+  
+  <select id="select4List" resultType="com.jeeplus.modules.business.entity.Order" >
+    select
+		order_id		as orderId , 
+		order_name		as orderName , 
+		user_id			as userId , 
+		event_id		as eventId , 
+		art_id			as artId , 
+		artist_id		as artistId , 
+		venue_id		as venueId , 
+	    cost_price		as costPrice , 
+	    sale_price		as salePrice , 
+	    event_time		as eventTime , 
+	    number			as number , 
+	    create_time		as createTime , 
+	    order_amount	as orderAmount, 
+	    balance_amount	as balanceAmount, 
+	    paid_amount		as paidAmount, 
+	    coupon_amount	as couponAmount, 
+	    update_time		as updateTime, 
+	    status			as status, 
+	    realname		as realname, 
+	    use_phone		as usePhone
+    from t_orders
+    <where>
+    	is_delete = 0
+    	<if test=" orderId != null and orderId != ''">
+    		and order_id like '%${orderId}%'
+    	</if>
+    	<if test="orderName != null and orderName != ''">
+    		and order_name like '%${orderName}%'
+    	</if>
+    	<if test="status != null and status != ''">
+    		and status like '%${status}%'
+    	</if>
+    	<if test="realname != null and realname != ''">
+    		and realname like '%${realname}%'
+    	</if>
+    	<if test="usePhone != null and usePhone != ''">
+    		and use_phone like '%${usePhone}%'
+    	</if>
+    	<if test="startTime != null">
+    		and create_time &gt;= #{startTime}
+    	</if>
+    	<if test="endTime != null">
+    		and create_time &lt;= #{endTime}
+    	</if>
+    </where>
+	order by create_time desc
+  </select>
+
+
+
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.UserCustomMapper" >
+
+
+ <select id="select4List" resultMap="BaseResultMap" parameterType="com.jeeplus.modules.business.entity.UserCustomExample" >
+    select
+    	id				as id, 
+    	user_id			as userId, 
+    	contact			as contact, 
+    	phone			as phone, 
+    	custom_type		as customType, 
+    	est_date		as estDate, 
+    	est_num			as estNum, 
+    	city			as city, 
+    	create_time		as createTime, 
+    	update_time		as updateTime, 
+    	status			as status, 
+    	trans_time		as transTime,
+    	event_id		as eventId
+    from t_user_custom
+    <where>
+    	<if test="phone != null and phone != ''">
+    		and phone like '%${phone}%'
+    	</if>
+    	<if test="customType != null and customType != ''">
+    		and custom_type = #{customType}
+    	</if>
+    	<if test="status != null and status != ''">
+    		and status = #{status}
+    	</if>
+    </where>
+      order by create_time
+  </select>
+
+
+
+
+
+</mapper>

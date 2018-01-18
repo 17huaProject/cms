@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.MaterialDeliveryMapper" >
+  
+  <select id="genBaseInfo" resultType="com.jeeplus.modules.business.dto.MaterialDeliveryBaseInfoDTO" parameterType="java.lang.Integer" >
+	SELECT 
+		e.id 			as eventId , 
+		e.capacity 		as capacity , 
+		e.event_name 	as eventName ,
+		a.art_name		as artName ,
+		m.id 			as materialModelId , 
+		m.`name`		as materialModelName , 
+		m.goods_info  	as materialModelGoodsInfo
+	from 
+		t_events as e 
+		INNER JOIN t_arts as a on e.art_id = a.id 
+		LEFT JOIN t_material_model as m on a.id = m.art_id 
+	where e.id = #{id}
+  </select>
+  
+  <select id="selectMaterialDelivery" resultType="com.jeeplus.modules.business.dto.MaterialDeliveryDTO" parameterType="java.lang.Integer" >
+	SELECT 
+		m.id 		as id, 
+		m.event_id 	as eventId, 
+		m.good_id 	as goodId, 
+		m.out_count as outCount, 
+		m.in_count 	as inCount, 
+		m.model_id	as modelId,
+		g.name 		as goodName, 
+		g.goods_no	as goodsNo
+	from t_material_delivery as m JOIN t_goods as g on  m.good_id = g.id
+	WHERE m.event_id = #{id} and m.deleted = 0
+  </select>
+
+  <select id="selectAllMaterialDeliverys" resultType="com.jeeplus.modules.business.entity.MaterialDelivery" >
+	SELECT 
+		m.id		 	as id, 
+		m.event_id		as eventId, 
+		m.update_time	as updateTime, 
+		m.status     	as status,
+		e.event_name	as eventName
+	from t_material_delivery as m LEFT JOIN t_events as e on m.event_id = e.id 
+	where  m.deleted = 0 and m.event_id in (SELECT id from t_events where event_name like '%${eventName}%')
+	GROUP BY m.event_id
+  </select>
+
+	
+  <resultMap id="MaterialDeliveryExport" type="com.jeeplus.modules.business.dto.MaterialDeliveryExportDTO" >
+  	<id property="eventId" column="eventId"/>
+  	<result property="capacity" column="capacity"/>
+  	<result property="eventName" column="eventName"/>
+  	<result property="eventTime" column="eventTime"/>
+  	<result property="address" column="address"/>
+  	<result property="assistantName" column="assistantName"/>
+  	<result property="assistantPhone" column="assistantPhone"/>
+  	<result property="exportTime" column="exportTime"/>
+  	<collection property="materials">
+	  	<id property="id" column="materialId"/>
+	  	<result property="outCount" column="outCount"/>
+	  	<result property="goodsNo" column="goodsNo"/>
+	  	<result property="goodName" column="goodsName"/>
+  	</collection>
+  </resultMap>
+
+
+  <select id="select4ExportMaterialDelivery" resultMap="MaterialDeliveryExport" parameterType="java.lang.Integer" >
+	SELECT 
+		e.id 			as eventId , 
+		e.capacity 		as capacity , 
+		e.event_name 	as eventName ,
+		e.event_time	as eventTime ,
+		md.id			as materialId ,
+		md.out_count	as outCount,
+		su.`name`		as assistantName ,
+		su.phone		as assistantPhone ,
+		v.address		as address ,
+		now()			as exportTime ,
+		g.goods_no		as goodsNo ,
+		g.`name`		as goodsName 
+	from 
+		t_material_delivery as md
+		left JOIN t_events as e on md.event_id = e.id
+		left JOIN t_goods as g on md.good_id = g.id 
+		INNER JOIN sys_user as su on e.assistant_id = su.id
+		INNER JOIN t_venues as v on e.venue_id = v.id
+	where md.event_id = #{id}
+  </select>
+
+
+
+</mapper>

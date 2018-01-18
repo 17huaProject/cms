@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.UserMapper" >
+
+  <select id="selectWorkTableUserInfo" resultType="com.jeeplus.modules.business.dto.WorkTableDTO" >
+	SELECT 'user' as owner ,'total' as type , count(*)+2000 as count , status from t_users 
+	UNION
+	SELECT 'user' as owner ,'todayNum' as type , count(*) as count , status from t_users where  `status` =1 and to_days(create_time) = to_days(now())
+	UNION
+	SELECT 'user' as owner ,'feedback_uncheck' as type , count(*) as count , status from t_feedback where  `status` =0
+	UNION
+	SELECT 'user' as owner ,'feedback' as type , count(*) as count , status from t_feedback
+
+  </select>
+
+	<update id="addBalance" parameterType="java.util.Map">
+		UPDATE t_users set balance = balance + #{balanceAdd} where user_id=#{userId}
+	</update>
+	<update id="addScore" parameterType="java.util.Map">
+		UPDATE t_users set score = score + #{scoreAdd} where user_id=#{userId}
+	</update>
+
+  <select id="selectByExample4List" resultType="com.jeeplus.modules.business.entity.User" >
+    select
+	   	u.user_id 		as userId, 
+	    u.phone			as phone, 
+	    u.realname		as realname, 
+	    uc.name			as name, 
+	    u.idcard		as idcard, 
+	    u.email			as email, 
+	    u.balance		as balance, 
+	    u.score			as score, 
+	    u.user_type		as userType, 
+	    u.create_time	as createTime, 
+	    u.update_time	as updateTime, 
+	    u.is_bind		as isBind, 
+	    u.status		as status,
+		up.nickname  	as nickname
+    from t_users u 
+    	LEFT JOIN t_user_contact uc on u.user_id = uc.user_id 
+    	left join t_user_profile up on u.user_id = up.user_id 
+    <where>
+    	<if test="phone != null and phone != ''">
+    		and u.phone like '%${phone}%'
+    	</if>
+    	<if test="realname != null and realname != ''">
+    		and u.realname like '%${realname}%'
+    	</if>
+    	<if test="name != null and name != ''">
+    		and uc.name like '%${name}%'
+    	</if>
+    	<if test="idcard != null and idcard != ''">
+    		and u.idcard like '%${idcard}%'
+    	</if>
+    	<if test="userType != null and userType != ''">
+    		and u.userType like '%${userType}%'
+    	</if>
+    </where>
+	 order by u.create_time desc
+  </select>
+
+</mapper>

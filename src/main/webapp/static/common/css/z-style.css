@@ -1,0 +1,43 @@
+/*自定义样式*/
+.pull-right{min-width:80px;}
+.pull-left{min-width:80px;}
+
+/* IE 6 不支持 max-height
+* 使用 height 代替，但是这会强制菜单总是显示为那个高度
+*/
+* html .ui-autocomplete {
+    height: 200px;
+ }
+.ui-autocomplete{
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden; /* 防止水平滚动条 */
+	list-style: none; 
+	margin-left:0px; 
+	padding-left:0px;}
+.ui-autocomplete  li a{ 
+	display:block; 
+	width: 86%; 
+	background:#F5F5F5; 
+	padding-top:2px; 
+	padding-left:3px;
+	padding-bottom:2px; 
+	border:#09F solid 0.2px; 
+	font-size:13px;
+	clear:both;
+}  
+.ui-autocomplete  li a:hover{ background: #E6E3FD }
+.ui-autocomplete  li a  .art-img{width:80px; height: 40px; display: inline-block; float:left; margin:5px;    }
+.ui-autocomplete  li a  .art-div-contain{display: inline-block; float:left; margin-top:8px;}
+
+
+.font-highlight{color:red};
+
+.multi-images-upload .pblock{ display: inline-block; width:80px; float:left; margin-left:10px;}
+.multi-images-upload .tools{ display: inline-block; width:80px; text-align:center; }
+.multi-images-upload .tools i{display: inline-block;}
+.multi-images-upload .pblock img{ width:80px; height:80px; display: inline-block; margin-bottom:2px;}
+.multi-images-upload .delete-icon .arrow-right{ margin-left:5px;}
+
+
+

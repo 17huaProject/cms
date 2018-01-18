@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 	xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context" 
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+			http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-4.0.xsd"
+		default-lazy-init="true">
+
+	<description>quartz schedule Configuration</description>
+
+	<!-- order notify -->
+	<bean id="orderJob" class="com.jeeplus.modules.business.schedule.OrderJob"></bean>
+	
+	<bean id="yesterdayOrdersNotify" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="orderJob"/>
+	    <property name="targetMethod" value="yesterdayOrdersNotify"/>
+	</bean>
+	<bean id="yesterdayOrdersNotifyTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="yesterdayOrdersNotify"/>
+	    <property name="cronExpression" value="0 0 5 * * ?"/>
+	</bean>
+	
+	<bean id="weekOrdersNotify" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="orderJob"/>
+	    <property name="targetMethod" value="weekOrdersNotify"/>
+	</bean>
+	<bean id="weekOrdersNotifyTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="weekOrdersNotify"/>
+	    <property name="cronExpression" value="0 0 23 ? * 1"/>
+	</bean>
+	
+	<bean id="monthOrdersNotify" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="orderJob"/>
+	    <property name="targetMethod" value="monthOrdersNotify"/>
+	</bean>
+	<bean id="monthOrdersNotifyTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="monthOrdersNotify"/>
+	    <property name="cronExpression" value="0 0 23 L * ?"/>
+	</bean>
+
+	<!-- invoice notify -->
+	<bean id="invoiceJob" class="com.jeeplus.modules.business.schedule.InvoiceJob"></bean>
+	
+	<bean id="undealInvoicesNotify" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="invoiceJob"/>
+	    <property name="targetMethod" value="undealInvoiceNotify"/>
+	</bean>
+	<bean id="undealInvoicesNotifyTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="undealInvoicesNotify"/>
+	    <property name="cronExpression" value="0 10 16 * * ?"/>
+	</bean>
+	
+	<!-- feedback notify -->
+	<bean id="feedbackJob" class="com.jeeplus.modules.business.schedule.FeedbackJob"></bean>
+	
+	<bean id="undealFeedbacksNotify" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="feedbackJob"/>
+	    <property name="targetMethod" value="undealFeedbacksNotify"/>
+	</bean>
+	<bean id="undealFeedbacksNotifyTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="undealFeedbacksNotify"/>
+	    <property name="cronExpression" value="0 0 16 * * ?"/>
+	</bean>
+	
+	<!-- Joinus notify -->
+	<bean id="joinusJob" class="com.jeeplus.modules.business.schedule.JoinusJob"></bean>
+	
+	<bean id="undealJoinusNotify" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	    <property name="targetObject" ref="joinusJob"/>
+	    <property name="targetMethod" value="undealJoinusNotify"/>
+	</bean>
+	<bean id="undealJoinusNotifyTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+	    <property name="jobDetail" ref="undealJoinusNotify"/>
+	    <property name="cronExpression" value="0 10 16 * * ?"/>
+	</bean>
+
+
+
+
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	    <property name="triggers">
+	        <list>
+	            <ref bean="yesterdayOrdersNotifyTrigger"/>
+	            <ref bean="weekOrdersNotifyTrigger"/>
+	            <ref bean="monthOrdersNotifyTrigger"/>
+	            <ref bean="undealInvoicesNotifyTrigger"/>
+	            <ref bean="undealFeedbacksNotifyTrigger"/>
+	            <ref bean="undealJoinusNotifyTrigger"/>
+	        </list>
+	    </property>
+	</bean>
+
+</beans>
+
+
+

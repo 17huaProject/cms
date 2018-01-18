@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.ArtMapper" >
+
+  <resultMap id="DtoBaseResultMap" type="com.jeeplus.modules.business.dto.ArtDTO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="art_name" property="artName" jdbcType="VARCHAR" />
+    <result column="event_num" property="eventNum" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="easy_level" property="easyLevel" jdbcType="FLOAT" />
+    <result column="is_free" property="isFree" jdbcType="TINYINT" />
+    <result column="big_img" property="bigImg" jdbcType="VARCHAR" />
+    <result column="small_img" property="smallImg" jdbcType="VARCHAR" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+  <sql id="Dto_Base_Column_List" >
+    id, art_name, event_num, type, easy_level, is_free, big_img, small_img, note
+  </sql>
+  
+  <select id="select4AutoCompleteByExample" resultMap="DtoBaseResultMap" parameterType="com.jeeplus.modules.business.entity.ArtExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Dto_Base_Column_List" />
+    from t_arts
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+  <select id="select4List" resultType="com.jeeplus.modules.business.entity.Art" >
+    select
+	    a.id			as id , 
+	    a.art_name		as artName , 
+	    a.event_num		as eventNum , 
+	    a.type			as type , 
+	    a.easy_level	as easyLevel , 
+	    a.is_free		as isFree , 
+	    a.big_img		as bigImg , 
+	    a.create_time	as createTime , 
+	    a.update_time	as updateTime , 
+	    a.note			as note ,
+	    a.status		as status ,
+	    m.id 			as materialModelId 
+    from t_arts as a LEFT JOIN t_material_model as m on  a.id = m.art_id
+    <where>
+    	<if test="artName != null and artName != ''">
+    		and a.art_name like '%${artName}%'
+    	</if>
+    	<if test="type != null and type != ''">
+    		and a.type = #{type}
+    	</if>
+    	<if test="isFree != null and isFree != ''">
+    		and a.is_free = #{isFree}
+    	</if>
+    	<if test="easyLevelStart != null and easyLevelStart != ''">
+    		and a.easy_level &gt;= #{easyLevelStart}
+    	</if>
+    	<if test="easyLevelEnd != null and easyLevelEnd != ''">
+    		and a.easy_level &lt;= #{easyLevelEnd}
+    	</if>
+    </where>
+    order by a.id
+  </select>
+  
+  <select id="selectWorkTableArtInfo" resultType="com.jeeplus.modules.business.dto.WorkTableDTO" >
+   SELECT 'art' as owner , 'total' as type , count(*) as count  from t_arts 
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+</mapper>

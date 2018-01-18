@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jeeplus.modules.business.dao.VenuesMapper" >
+
+  <resultMap id="DtoBaseResultMap" type="com.jeeplus.modules.business.dto.VenueDTO" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="venue_name" property="venueName" jdbcType="VARCHAR" />
+    <result column="contact" property="contact" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="big_img" property="bigImg" jdbcType="VARCHAR" />
+    <result column="small_img" property="smallImg" jdbcType="VARCHAR" />
+    <result column="capacity" property="capacity" jdbcType="SMALLINT" />
+    <result column="province_code" property="provinceCode" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="latitude" property="latitude" jdbcType="VARCHAR" />
+    <result column="longitude" property="longitude" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="venue_desc" property="venueDesc" jdbcType="VARCHAR" />
+    <result column="is_check" property="isCheck" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="operator_id" property="operatorId" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="dto_Base_Column_List" >
+    id, venue_name, contact, phone, email, type, big_img, small_img, capacity, province_code, 
+    city_code, city, address, latitude, longitude, status, is_check
+  </sql>
+
+  <select id="select4AutoCompleteByExample" resultMap="DtoBaseResultMap" parameterType="com.jeeplus.modules.business.entity.VenuesExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="dto_Base_Column_List" />
+    from t_venues
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  
+  
+  <select id="selectWorkTableVenusInfo" resultType="com.jeeplus.modules.business.dto.WorkTableDTO" >
+    SELECT 'venues' as owner , 'uncheck' as type , count(*) as count , is_check as status from t_venues where is_check=0 and `status`=1
+    UNION
+ 	SELECT 'venues' as owner , 'checked' as type , count(*) as count , is_check as status from t_venues where is_check=1 and `status`=1   
+  </select>
+  
+  <select id="select4List" resultType="com.jeeplus.modules.business.entity.Venues">
+    select
+   		id				as id, 
+   		venue_name		as venueName, 
+   		contact			as contact,	 
+   		phone			as phone, 
+   		type			as type, 
+   		capacity		as capacity, 
+   		city			as city, 
+   		address			as address, 
+   		status			as status, 
+   		update_time		as updateTime, 
+   		is_check		as isCheck
+    from t_venues
+    <where>
+    	<if test="venueName != null and venueName != ''">
+    		and venue_name like '%${venueName}%'
+    	</if>
+    	<if test="type != null">
+    		and type like '%${type}%'
+    	</if>
+    	<if test="provinceCode != null">
+    		and province_code like '%${provinceCode}%'
+    	</if>
+    	<if test="cityCode != null">
+    		and city_code like '%${cityCode}%'
+    	</if>
+    	<if test="isCheck != null">
+    		and is_check like '%${isCheck}%'
+    	</if>
+    	<if test="capacityStart != null">
+    		and capacity &gt;= #{capacityStart}
+    	</if>
+    	<if test="capacityEnd != null">
+    		and capacity &lt;= #{capacityEnd}
+    	</if>
+    </where>
+    order by id
+  </select>
+  
+  
+</mapper>

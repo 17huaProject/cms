@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <!-- mySql 数据库驱动 -->
+    <classPathEntry
+            location="D:/developsoft/java/maven/repos/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar"/>
+    <context id="context1">
+        <!-- 取消注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+
+        <!-- 数据库连接 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://123.207.173.153:3880/yqh_bsp" 
+                        userId="yqhuser"
+                        password="yqh123@2017"/>
+
+        <!-- 实体类 -->
+        <javaModelGenerator targetPackage="com.jeeplus.modules.business.entity"
+                            targetProject="yqhWMS/src/main/java">
+        </javaModelGenerator>
+        <!-- mapper.xml 文件 -->
+        <sqlMapGenerator targetPackage="mappings.modules.business"
+                         targetProject="yqhWMS/src/main/resources"/>
+
+        <!-- mapper.java 文件 -->
+        <javaClientGenerator targetPackage="com.jeeplus.modules.business.dao"
+                             targetProject="yqhWMS/src/main/java" type="XMLMAPPER"/>
+
+        <!-- 要生成的表 -->
+       <!--  <table tableName="t_venues" domainObjectName="Venues"></table> -->
+        <!-- <table tableName="b_region" domainObjectName="Region"></table> -->
+        <!-- <table tableName="b_city" domainObjectName="City"></table>-->
+        <!-- <table tableName="t_artists" domainObjectName="Artist"></table>  -->
+        <!-- <table tableName="t_articles" domainObjectName="Article"></table>  -->
+		<!-- <table tableName="t_article_cat" domainObjectName="ArticleCat"></table>  -->
+        <!-- <table tableName="t_arts" domainObjectName="Art"></table>  -->
+       <!--  <table tableName="t_events" domainObjectName="Event"></table>  -->
+       <!--  <table tableName="t_event_detail" domainObjectName="EventDetail"></table>  -->
+       <!--  <table tableName="t_orders" domainObjectName="Order"></table>  -->
+       <!--  <table tableName="t_order_paid" domainObjectName="OrderPaid"></table>  -->
+       <!--  <table tableName="t_order_refund" domainObjectName="OrderRefund"></table>  -->
+       <!--  <table tableName="t_order_detail" domainObjectName="OrderDetail"></table>  -->
+       <!--  <table tableName="t_users" domainObjectName="User"></table> --> 
+       <!--  <table tableName="t_user_custom" domainObjectName="UserCustom"></table> -->
+       <!--  <table tableName="t_user_balance_record" domainObjectName="UserBalanceRecord"></table> -->
+       <!--  <table tableName="t_user_profile" domainObjectName="UserProfile"></table> -->
+       <!-- <table tableName="t_user_coupon" domainObjectName="UserCoupon"></table> -->
+       <!--  <table tableName="t_sysuser_artist" domainObjectName="SysUserArtist"></table> -->
+       <!--  <table tableName="t_feedback" domainObjectName="Feedback"></table> -->
+       <!--  <table tableName="t_gifts" domainObjectName="Gift"></table> -->
+       <!--  <table tableName="t_gift_photo" domainObjectName="GiftPhoto"></table> -->
+       <!--  <table tableName="t_goods" domainObjectName="Good"></table> -->
+       <!--  <table tableName="t_goods_category" domainObjectName="GoodCategory"></table> -->
+       <!--  <table tableName="t_material_delivery" domainObjectName="MaterialDelivery"></table> -->
+       <!--  <table tableName="t_material_model" domainObjectName="MaterialModel"></table> -->
+       <!-- <table tableName="t_invoices" domainObjectName="Invoice"></table> -->
+       <!-- <table tableName="t_joinus" domainObjectName="Joinus"></table> -->
+       <table tableName="t_commission_settlement" domainObjectName="CommissionSettlement"></table>
+
+
+
+
+
+    </context>
+</generatorConfiguration>
